@@ -5,48 +5,111 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LingoTune – Legal Documents</title>
   <style>
-    body {
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #f0f0f0;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
-      background: #f4f7f9;
-      color: #333;
+      height: 100%;
+      text-align: center;
     }
 
     h1 {
       font-size: 2rem;
+      color: #ffffff;
       margin-bottom: 10px;
-      color: #2c3e50;
     }
 
     p {
-      font-size: 1rem;
+      color: #cccccc;
       margin-bottom: 20px;
     }
 
     a {
       text-decoration: none;
-      color: white;
+      color: #ffffff;
       background-color: #2980b9;
       padding: 10px 20px;
       margin: 5px;
       border-radius: 6px;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
     a:hover {
       background-color: #1e5f87;
+      transform: scale(1.05);
     }
   </style>
 </head>
 <body>
-  <h1>Welcome to LingoTune</h1>
-  <p>Below you can find our legal documents:</p>
-  <a href="privacy.html">Privacy Policy</a>
-  <a href="terms.html">Terms of Service</a>
+  <canvas id="bgCanvas"></canvas>
+  <div class="content">
+    <h1>We thank you for using our app</h1>
+    <p>Explore our legal documents below:</p>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms of Service</a>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("bgCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+
+    window.addEventListener("resize", () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+
+    const particles = Array.from({ length: 100 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      radius: Math.random() * 1.5 + 0.5
+    }));
+
+    function draw() {
+      ctx.fillStyle = "#121212";
+      ctx.fillRect(0, 0, w, h);
+
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
 </body>
 </html>
